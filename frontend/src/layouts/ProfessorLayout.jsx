@@ -9,6 +9,7 @@ import ProfMaterials from '../pages/ProfMaterials';
 import ManageLeaves from '../pages/ManageLeaves';
 import NoticeBoard from '../pages/NoticeBoard';
 import ProfProfile from '../pages/ProfProfile';
+import ProfessorGrades from '../pages/ProfessorGrades';
 
 const ProfessorLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -19,7 +20,8 @@ const ProfessorLayout = () => {
     { path: '/professor/attendance',    name: 'Attendance' },
     { path: '/professor/studymaterial', name: 'Study Material' },
     { path: '/professor/leaves',        name: 'Leave Approvals' },
-    { path: '/professor/notices',       name: 'Notice Board' },
+    { path: '/professor/notices', name: 'Notice Board' },
+    { path: '/professor/grades', name: 'Submit Grades' },
     { path: '/professor/profile',       name: 'Profile' },
   ];
 
@@ -44,8 +46,10 @@ const ProfessorLayout = () => {
             <Route path="studymaterial" element={<ProfMaterials />} />
             <Route path="leaves"        element={<ManageLeaves />} />
             <Route path="notices"       element={<NoticeBoard />} />
-            <Route path="profile"       element={<ProfProfile />} />
-            <Route path="*"             element={<ProfDashboard />} />
+            <Route path="profile" element={<ProfProfile />} />
+            <Route path="grades" element={<ProfessorGrades />} />
+            <Route path="*" element={<ProfDashboard />} />
+            
           </Routes>
         </div>
       </div>
