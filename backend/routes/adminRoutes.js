@@ -12,6 +12,8 @@ const advisingController = require('../controllers/advisingController') || {};
 
 const gradeController = require('../controllers/gradeController') || {};
 
+const timetableController = require('../controllers/timetableController') || {};
+
 const safeHandler = handler => {
   return typeof handler === 'function'
     ? handler
@@ -50,6 +52,9 @@ router.get(
   protect,
   safeHandler(gradeController.getStudentReportCard),
 );
+
+// ➕ এই লাইনটি adminOnly মিডলওয়্যারের ওপরে উন্মুক্ত অংশে যুক্ত করুন
+router.get('/timetable/professor-feed', protect, safeHandler(timetableController.getProfessorTimetable));
 
 
 router.use(protect, adminOnly);
@@ -119,6 +124,20 @@ router.get('/advising/list', safeHandler(advisingController.getAllAdvisings));
 router.put(
   '/advising/respond/:id',
   safeHandler(advisingController.respondToAdvising),
+);
+
+router.get('/timetable/list', safeHandler(timetableController.getTimetables));
+router.get(
+  '/timetable/form-data',
+  safeHandler(timetableController.getTimetableFormData),
+);
+router.post(
+  '/timetable/create',
+  safeHandler(timetableController.createTimetable),
+);
+router.delete(
+  '/timetable/delete/:id',
+  safeHandler(timetableController.deleteTimetable),
 );
 
 module.exports = router;

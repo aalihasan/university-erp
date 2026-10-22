@@ -13,6 +13,8 @@ import ManageDepartments from '../pages/ManageDepartments';
 import ManageFees from '../pages/ManageFees';
 import ManageSemesters from '../pages/ManageSemesters'; 
 import ManageAdvising from '../pages/ManageAdvising';
+import ManageTimetables from '../pages/ManageTimetables';
+
 
 
 const AdminLayout = () => {
@@ -30,6 +32,7 @@ const AdminLayout = () => {
     { path: '/admin/leaves', name: 'Leave Requests' },
     { path: '/admin/fees', name: 'Fees Management' },
     { path: '/admin/advising', name: 'Course Advising' },
+    { path: '/admin/timetable', name: 'Class Timetable' },
 
     { path: '/admin/profile', name: 'Profile' },
   ];
@@ -99,6 +102,7 @@ const AdminLayout = () => {
             <Route path="*" element={<AdminDashboard />} />
             <Route path="fees" element={<ManageFees />} />
             <Route path="advising" element={<ManageAdvising />} />
+            <Route path="timetable" element={<ManageTimetables />} />
           </Routes>
         </div>
       </div>
