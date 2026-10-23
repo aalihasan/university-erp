@@ -18,7 +18,7 @@ const StudentAdvising = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        'https://university-erp-backend-yfj2.onrender.com/api/admin/advising/student-form',
+        'https://onrender.com/api/admin/advising/student-form',
         hHeaders(),
       );
       setSemesters(
@@ -55,7 +55,7 @@ const StudentAdvising = () => {
 
     try {
       await axios.post(
-        'https://university-erp-backend-yfj2.onrender.com/api/admin/advising/create',
+        'https://onrender.com/api/admin/advising/create',
         {
           semester: selectedSemester,
           subjects: selectedSubjects,

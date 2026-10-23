@@ -133,8 +133,7 @@ const TopNav = ({ title, onMenuToggle }) => {
   const { user } = useContext(AuthContext);
 
   const API_URL =
-    import.meta.env.VITE_API_URL?.replace('/api', '') ||
-    'https://university-erp-backend-yfj2.onrender.com';
+    import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://onrender.com';
 
   return (
     <div

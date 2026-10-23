@@ -37,16 +37,10 @@ const AdminSubjects = () => {
     try {
       // সমাধান: লোকাল স্টোরেজের প্রপার হেডার দিয়ে ৩টি এপিআই কল করা হলো
       const [subRes, crsRes, profRes] = await Promise.all([
+        axios.get('https://onrender.com/api/admin/subjects', getAuthHeaders()),
+        axios.get('https://onrender.com/api/admin/courses', getAuthHeaders()),
         axios.get(
-          'https://university-erp-backend-yfj2.onrender.com/api/admin/subjects',
-          getAuthHeaders(),
-        ),
-        axios.get(
-          'https://university-erp-backend-yfj2.onrender.com/api/admin/courses',
-          getAuthHeaders(),
-        ),
-        axios.get(
-          'https://university-erp-backend-yfj2.onrender.com/api/admin/users?role=Professor',
+          'https://onrender.com/api/admin/users?role=Professor',
           getAuthHeaders(),
         ),
       ]);
@@ -65,13 +59,13 @@ const AdminSubjects = () => {
     try {
       if (editingId) {
         await axios.put(
-          `https://university-erp-backend-yfj2.onrender.com/api/admin/subjects/${editingId}`,
+          `https://onrender.com/api/admin/subjects/${editingId}`,
           formData,
           getAuthHeaders(),
         );
       } else {
         await axios.post(
-          'https://university-erp-backend-yfj2.onrender.com/api/admin/subjects',
+          'https://onrender.com/api/admin/subjects',
           formData,
           getAuthHeaders(),
         );
@@ -93,7 +87,7 @@ const AdminSubjects = () => {
     if (!deleteTarget) return;
     try {
       await axios.delete(
-        `https://university-erp-backend-yfj2.onrender.com/api/admin/subjects/${deleteTarget}`,
+        `https://onrender.com/api/admin/subjects/${deleteTarget}`,
         getAuthHeaders(),
       );
       fetchData();

@@ -19,14 +19,11 @@ const StudentLeaves = () => {
       const token = localStorage.getItem('token');
 
       // সমাধান: এক্সিওস রিকোয়েস্টে হেডার পাসিং লজিক ১০০% নিখুঁত করা হলো
-      const res = await axios.get(
-        'https://university-erp-backend-yfj2.onrender.com/api/student/leaves',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const res = await axios.get('https://onrender.com/api/student/leaves', {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       // ব্যাকএন্ড থেকে আসা ডেটা সরাসরি অ্যারে নাকি অবজেক্ট তা চেক করে স্টেটে রাখা হলো
       if (res.data) {
@@ -48,15 +45,11 @@ const StudentLeaves = () => {
       const token = localStorage.getItem('token');
 
       // সমাধান: পোস্ট রিকোয়েস্টে ডেটা রেন্ডারিং সিঙ্ক
-      await axios.post(
-        'https://university-erp-backend-yfj2.onrender.com/api/student/leaves',
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      await axios.post('https://onrender.com/api/student/leaves', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       setShowForm(false);
       setFormData({ date: '', reason: '' });

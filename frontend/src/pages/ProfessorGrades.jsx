@@ -29,7 +29,7 @@ const ProfessorGrades = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          'https://university-erp-backend-yfj2.onrender.com/api/admin/grades/form-data',
+          'https://onrender.com/api/admin/grades/form-data',
           hHeaders(),
         );
         setStudents(res.data?.students || []);
@@ -59,7 +59,7 @@ const ProfessorGrades = () => {
     }
     try {
       await axios.post(
-        'https://university-erp-backend-yfj2.onrender.com/api/admin/grades/submit',
+        'https://onrender.com/api/admin/grades/submit',
         formData,
         hHeaders(),
       );

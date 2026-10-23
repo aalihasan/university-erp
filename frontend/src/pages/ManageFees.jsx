@@ -29,14 +29,8 @@ const ManageFees = () => {
     try {
       setLoading(true);
       const [feeRes, formRes] = await Promise.all([
-        axios.get(
-          'https://university-erp-backend-yfj2.onrender.com/api/admin/fees/list',
-          hHeaders(),
-        ),
-        axios.get(
-          'https://university-erp-backend-yfj2.onrender.com/api/admin/fees/form-data',
-          hHeaders(),
-        ),
+        axios.get('https://onrender.com/api/admin/fees/list', hHeaders()),
+        axios.get('https://onrender.com/api/admin/fees/form-data', hHeaders()),
       ]);
 
       // সমাধান: 'res.data' এর পরিবর্তে সঠিক ভেরিয়েবল 'feeRes.data' লক করা হলো
@@ -65,7 +59,7 @@ const ManageFees = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'https://university-erp-backend-yfj2.onrender.com/api/admin/fees/create',
+        'https://onrender.com/api/admin/fees/create',
         formData,
         hHeaders(),
       );
@@ -89,7 +83,7 @@ const ManageFees = () => {
       return showToast('Enter valid amount', 'error');
     try {
       await axios.put(
-        `https://university-erp-backend-yfj2.onrender.com/api/admin/fees/pay/${id}`,
+        `https://onrender.com/api/admin/fees/pay/${id}`,
         { amountPaid: payAmount },
         hHeaders(),
       );
