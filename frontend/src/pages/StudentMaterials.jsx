@@ -21,7 +21,7 @@ const StudentMaterials = () => {
       try {
         // সমাধান: টোকেন হেডার এবং লোকালহোস্ট লিংক দিয়ে স্টাডি মেটেরিয়ালের লিস্ট গেট করা হলো
         const res = await axios.get(
-          'https://university-erp-backend-yfj2.onrender.com//api/student/studymaterial',
+          'https://university-erp-backend-yfj2.onrender.com/api/student/studymaterial',
           getAuthHeaders(),
         );
 
@@ -82,7 +82,7 @@ const StudentMaterials = () => {
               <p style={{ marginTop: '0.5rem', flex: 1 }}>{mat.description}</p>
               {/* সমাধান: ফাইল ডাউনলোডের ইউআরএল সরাসরি লোকালহোস্টে ম্যাপ করা হলো */}
               <a
-                href={`https://university-erp-backend-yfj2.onrender.com/${mat.fileUrl}`}
+                href={`https://university-erp-backend-yfj2.onrender.com${mat.fileUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-primary flex justify-center mt-4"

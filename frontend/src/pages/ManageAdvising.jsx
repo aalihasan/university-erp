@@ -15,7 +15,7 @@ const ManageAdvising = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        'https://university-erp-backend-yfj2.onrender.com//api/admin/advising/list',
+        'https://university-erp-backend-yfj2.onrender.com/api/admin/advising/list',
         hHeaders(),
       );
       setAdvisings(Array.isArray(res.data) ? res.data : []);
@@ -35,7 +35,7 @@ const ManageAdvising = () => {
   const handleAction = async (id, status) => {
     try {
       await axios.put(
-        `https://university-erp-backend-yfj2.onrender.com//api/admin/advising/respond/${id}`,
+        `https://university-erp-backend-yfj2.onrender.com/api/admin/advising/respond/${id}`,
         { status },
         hHeaders(),
       );
