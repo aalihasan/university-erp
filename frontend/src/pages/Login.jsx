@@ -1,206 +1,148 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
-// import DDULogo from '../assets/logo.png';
+import { useToast } from '../context/ToastContext';
 
-import CollegeBg from '../assets/uu.png';
 const Login = () => {
-  const [registeredUniversity] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('registeredUniversity'));
-    } catch {
-      return null;
-    }
-  });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const { login } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { showToast } = useToast();
+
   const handleSubmit = async e => {
     e.preventDefault();
-    setError(null);
     try {
-      const userData = await login(email, password);
-      if (userData.role === 'Admin') navigate('/admin');
-      if (userData.role === 'Professor') navigate('/professor');
-      if (userData.role === 'Student') navigate('/student');
+      setLoading(true);
+
+      // 🌟 সমাধান: ৪0৪ এরর দূর করতে আপনার লাইভ রেন্ডার ব্যাকএন্ডের সঠিক অফিশিয়াল লগইন এন্ডপয়েন্ট লিঙ্ক করা হলো
+      const res = await axios.post('https://onrender.com', {
+        email,
+        password,
+      });
+
+      if (res.data && res.data.token) {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('user', JSON.stringify(res.data));
+
+        showToast('Login successful! Welcome back.', 'success');
+
+        // রোল অনুযায়ী ড্যাশবোর্ডে রিডাইরেক্ট লজিক
+        const role = res.data.role;
+        if (role === 'Admin') navigate('/admin/dashboard');
+        else if (role === 'Professor') navigate('/professor/dashboard');
+        else navigate('/student/dashboard');
+      }
     } catch (err) {
-      setError(err);
+      console.error(err);
+      showToast(
+        err.response?.data?.message || 'Login failed! Invalid credentials.',
+        'error',
+      );
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div
-      className="app-container"
       style={{
-        justifyContent: 'center',
+        display: 'flex',
+        height: '100vh',
         alignItems: 'center',
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${CollegeBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        justifyContent: 'center',
+        background: 'var(--bg-primary)',
       }}
     >
       <div
         className="glass-panel"
         style={{
+          padding: '2.5rem',
           width: '100%',
           maxWidth: '400px',
-          padding: '2.5rem',
-          background: 'rgba(255, 255, 255, 0.6)',
+          borderRadius: '16px',
+          textAlign: 'center',
         }}
       >
-        <div className="text-center mb-4">
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginBottom: '1rem',
-            }}
+        <div
+          style={{
+            width: '80px',
+            height: '80px',
+            background: '#fff',
+            borderRadius: '50%',
+            margin: '0 auto 1rem auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '1px solid rgba(255,255,255,0.1)',
+          }}
+        >
+          <span
+            style={{ color: '#333', fontSize: '0.8rem', fontWeight: 'bold' }}
           >
-            <div
-              style={{
-                padding: '0.2rem',
-                borderRadius: '50%',
-                background: 'white',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '90px',
-                height: '90px',
-                overflow: 'hidden',
-                border: '3px solid var(--accent-primary)',
-                boxShadow: 'var(--shadow-md)',
-              }}
-            >
-              {/* <img
-                src={DDULogo}
-                alt="Nexus Logo"
-                style={{ width: '100%', height: 'auto' }}
-              /> */}
-              <img
-                src={
-                  registeredUniversity?.logo
-                    ? registeredUniversity.logo.startsWith('http')
-                      ? registeredUniversity.logo
-                      : `${import.meta.env.VITE_API_URL.replace('/api', '')}${registeredUniversity.logo}`
-                    : '/default-logo.png'
-                }
-                alt="University Logo"
-                style={{
-                  width: '100%',
-                  height: 'auto',
-                }}
-              />
-            </div>
-          </div>
-          {/* <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Uttara University</h2> */}
-          <h2
-            style={{
-              fontSize: '1.5rem',
-              margin: 0,
-            }}
-          >
-            {registeredUniversity?.name || 'University ERP'}
-          </h2>
-          <p
-            style={{
-              color: 'var(--text-secondary)',
-              marginTop: '0.5rem',
-              fontWeight: '500',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
-              fontSize: '0.85rem',
-            }}
-          >
-            LOGIN
-          </p>
+            University
+          </span>
         </div>
-        {error && (
+        <h2 style={{ marginBottom: '1.5rem' }}>University ERP Login</h2>
+
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.25rem',
+            textAlign: 'left',
+          }}
+        >
           <div
-            style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
-              borderLeft: '4px solid var(--danger)',
-              padding: '1rem',
-              marginBottom: '1.5rem',
-              borderRadius: '0 var(--radius-md) var(--radius-md) 0',
-              display: 'flex',
-              gap: '0.5rem',
-              alignItems: 'center',
-            }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}
           >
-            <AlertCircle size={20} color="var(--danger)" />
-            <span style={{ color: 'var(--danger)', fontSize: '0.875rem' }}>
-              {error}
-            </span>
-          </div>
-        )}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="email">
+            <label style={{ fontSize: '0.85rem', fontWeight: '500' }}>
               Email Address
             </label>
-            <div style={{ position: 'relative' }}>
-              <Mail
-                size={18}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '1rem',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-muted)',
-                }}
-              />
-              <input
-                id="email"
-                type="email"
-                className="form-input"
-                style={{ paddingLeft: '2.5rem' }}
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="example@gmail.com"
-                required
-              />
-            </div>
+            <input
+              type="email"
+              className="form-input"
+              placeholder="admin@uttarauniversity.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
           </div>
-          <div className="form-group">
-            <label className="form-label" htmlFor="password">
+
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}
+          >
+            <label style={{ fontSize: '0.85rem', fontWeight: '500' }}>
               Password
             </label>
-            <div style={{ position: 'relative' }}>
-              <Lock
-                size={18}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '1rem',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-muted)',
-                }}
-              />
-              <input
-                id="password"
-                type="password"
-                className="form-input"
-                style={{ paddingLeft: '2.5rem' }}
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="•••••••••••"
-                required
-              />
-            </div>
+            <input
+              type="password"
+              className="form-input"
+              placeholder="••••••••"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
           </div>
+
           <button
             type="submit"
             className="btn btn-primary"
-            style={{ width: '100%', marginTop: '1rem', padding: '0.875rem' }}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              fontWeight: 'bold',
+              marginTop: '0.5rem',
+            }}
+            disabled={loading}
           >
-            Sign In
+            {loading ? 'Authenticating...' : 'Sign In'}
           </button>
         </form>
       </div>
     </div>
   );
 };
+
 export default Login;
