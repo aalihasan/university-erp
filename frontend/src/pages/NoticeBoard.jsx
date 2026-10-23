@@ -28,10 +28,11 @@ const NoticeBoard = () => {
   };
 
   const getApiEndpoint = () => {
-    if (user?.role === 'Admin') return 'https://onrender.com/api/admin/notices';
+    if (user?.role === 'Admin')
+      return 'http://localhost:5000/api/admin/notices';
     if (user?.role === 'Professor')
-      return 'https://onrender.com/api/professor/notices';
-    return 'https://onrender.com/api/student/notices';
+      return 'http://localhost:5000/api/professor/notices';
+    return 'http://localhost:5000/api/student/notices';
   };
 
   useEffect(() => {
@@ -56,7 +57,7 @@ const NoticeBoard = () => {
     if (user?.role !== 'Admin') return;
     try {
       await axios.post(
-        'https://onrender.com/api/admin/notices',
+        'http://localhost:5000/api/admin/notices',
         formData,
         getAuthHeaders(),
       );
@@ -79,7 +80,7 @@ const NoticeBoard = () => {
     try {
       // সমাধান: টোকেন হেডার দিয়ে ডাটা ডিলিট করা হলো
       await axios.delete(
-        `https://onrender.com/api/admin/notices/${deleteTarget}`,
+        `http://localhost:5000/api/admin/notices/${deleteTarget}`,
         getAuthHeaders(),
       );
       showToast('Notice deleted successfully', 'success');

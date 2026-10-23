@@ -25,11 +25,11 @@ const ProfMaterials = () => {
     try {
       const [matRes, crsRes] = await Promise.all([
         axios.get(
-          'https://onrender.com/api/professor/studymaterial',
+          'http://localhost:5000/api/professor/studymaterial',
           getAuthHeaders(),
         ),
         axios.get(
-          'https://onrender.com/api/professor/courses',
+          'http://localhost:5000/api/professor/courses',
           getAuthHeaders(),
         ),
       ]);
@@ -59,7 +59,7 @@ const ProfMaterials = () => {
 
     try {
       await axios.post(
-        'https://onrender.com/api/professor/studymaterial',
+        'http://localhost:5000/api/professor/studymaterial',
         formData,
         {
           headers: {
@@ -87,7 +87,7 @@ const ProfMaterials = () => {
     if (!deleteTarget) return;
     try {
       await axios.delete(
-        `https://onrender.com/api/professor/studymaterial/${deleteTarget}`,
+        `http://localhost:5000/api/professor/studymaterial/${deleteTarget}`,
         getAuthHeaders(),
       );
       fetchData();
@@ -214,7 +214,7 @@ const ProfMaterials = () => {
             </p>
             <p style={{ marginTop: '0.5rem', flex: 1 }}>{mat.description}</p>
             <a
-              href={`https://onrender.com${mat.fileUrl}`}
+              href={`http://localhost:5000${mat.fileUrl}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary"

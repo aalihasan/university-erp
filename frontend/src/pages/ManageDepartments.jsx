@@ -41,7 +41,7 @@ const ManageDepartments = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        'https://onrender.com/api/admin/departments',
+        'http://localhost:5000/api/admin/departments',
         getAuthHeaders(),
       );
       setDepartments(Array.isArray(res.data) ? res.data : []);
@@ -61,7 +61,7 @@ const ManageDepartments = () => {
     try {
       setSeeding(true);
       const res = await axios.post(
-        'https://onrender.com/api/admin/departments/seed',
+        'http://localhost:5000/api/admin/departments/seed',
         {},
         getAuthHeaders(),
       );
@@ -84,7 +84,7 @@ const ManageDepartments = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'https://onrender.com/api/admin/departments',
+        'http://localhost:5000/api/admin/departments',
         formData,
         getAuthHeaders(),
       );

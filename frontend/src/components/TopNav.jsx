@@ -133,7 +133,8 @@ const TopNav = ({ title, onMenuToggle }) => {
   const { user } = useContext(AuthContext);
 
   const API_URL =
-    import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://onrender.com';
+    import.meta.env.VITE_API_URL?.replace('/api', '') ||
+    'http://localhost:5000';
 
   return (
     <div

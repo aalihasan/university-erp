@@ -19,7 +19,7 @@ const StudentLeaves = () => {
       const token = localStorage.getItem('token');
 
       // সমাধান: এক্সিওস রিকোয়েস্টে হেডার পাসিং লজিক ১০০% নিখুঁত করা হলো
-      const res = await axios.get('https://onrender.com/api/student/leaves', {
+      const res = await axios.get('http://localhost:5000/api/student/leaves', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,7 +45,7 @@ const StudentLeaves = () => {
       const token = localStorage.getItem('token');
 
       // সমাধান: পোস্ট রিকোয়েস্টে ডেটা রেন্ডারিং সিঙ্ক
-      await axios.post('https://onrender.com/api/student/leaves', formData, {
+      await axios.post('http://localhost:5000/api/student/leaves', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

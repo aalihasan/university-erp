@@ -1,34 +1,30 @@
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const dotenv = require('dotenv');
-const adminRoutes = require('./routes/adminRoutes');
-
+const path = require('path');
 dotenv.config();
 const app = express();
-
-// 🌟 সমাধান: ভার্সেল এবং রেন্ডার ক্লাউডের মধ্যে ডাটা আদান-প্রদান নিশ্চিত করতে CORS সম্পূর্ণ ওপেন করা হলো
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
+app.use(cors());
 app.use(express.json());
-
-// বেস রুট চেকার
-app.get('/', (req, res) => {
-  res.send('University Management System API is running');
-});
-
-// অ্যাডমিন ও ইআরপি রাউট মাউন্টিং
+app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const professorRoutes = require('./routes/professorRoutes');
+const studentRoutes = require('./routes/studentRoutes');
+app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-
-// ডাটাবেজ কানেকশন
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB Connected Successfully'))
-  .catch((err) => console.error('MongoDB Connection Error:', err));
-
+app.use('/api/professor', professorRoutes);
+app.use('/api/student', studentRoutes);
+mongoose.connect(process.env.MONGO_URI).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err) => {
+  console.error('MongoDB connection error:', err);
+});
+app.get("/", (req, res) => {
+  res.send("University Management System API is running");
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
