@@ -25,11 +25,11 @@ const ProfMaterials = () => {
     try {
       const [matRes, crsRes] = await Promise.all([
         axios.get(
-          'http://localhost:5000/api/professor/studymaterial',
+          'https://university-erp-backend-yfj2.onrender.com//api/professor/studymaterial',
           getAuthHeaders(),
         ),
         axios.get(
-          'http://localhost:5000/api/professor/courses',
+          'https://university-erp-backend-yfj2.onrender.com//api/professor/courses',
           getAuthHeaders(),
         ),
       ]);
@@ -59,7 +59,7 @@ const ProfMaterials = () => {
 
     try {
       await axios.post(
-        'http://localhost:5000/api/professor/studymaterial',
+        'https://university-erp-backend-yfj2.onrender.com//api/professor/studymaterial',
         formData,
         {
           headers: {
@@ -87,7 +87,7 @@ const ProfMaterials = () => {
     if (!deleteTarget) return;
     try {
       await axios.delete(
-        `http://localhost:5000/api/professor/studymaterial/${deleteTarget}`,
+        `https://university-erp-backend-yfj2.onrender.com//api/professor/studymaterial/${deleteTarget}`,
         getAuthHeaders(),
       );
       fetchData();
@@ -214,7 +214,7 @@ const ProfMaterials = () => {
             </p>
             <p style={{ marginTop: '0.5rem', flex: 1 }}>{mat.description}</p>
             <a
-              href={`http://localhost:5000${mat.fileUrl}`}
+              href={`https://university-erp-backend-yfj2.onrender.com/${mat.fileUrl}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary"

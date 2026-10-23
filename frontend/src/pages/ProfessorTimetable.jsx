@@ -17,7 +17,7 @@ const ProfessorTimetable = () => {
         setLoading(true);
         // সমাধান: নতুন ডেডিকেটেড প্রফেসর-ফিড এপিআই থেকে সরাসরি ডাটা আনা হচ্ছে
         const res = await axios.get(
-          'http://localhost:5000/api/admin/timetable/professor-feed',
+          'https://university-erp-backend-yfj2.onrender.com//api/admin/timetable/professor-feed',
           hHeaders(),
         );
         setMyRoutine(Array.isArray(res.data) ? res.data : []);

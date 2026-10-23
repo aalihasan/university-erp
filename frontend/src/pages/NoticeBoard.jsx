@@ -18,7 +18,6 @@ const NoticeBoard = () => {
   });
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  
   const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
     return {
@@ -28,13 +27,12 @@ const NoticeBoard = () => {
     };
   };
 
-  
   const getApiEndpoint = () => {
     if (user?.role === 'Admin')
-      return 'http://localhost:5000/api/admin/notices';
+      return 'https://university-erp-backend-yfj2.onrender.com//api/admin/notices';
     if (user?.role === 'Professor')
-      return 'http://localhost:5000/api/professor/notices';
-    return 'http://localhost:5000/api/student/notices';
+      return 'https://university-erp-backend-yfj2.onrender.com//api/professor/notices';
+    return 'https://university-erp-backend-yfj2.onrender.com//api/student/notices';
   };
 
   useEffect(() => {
@@ -45,7 +43,6 @@ const NoticeBoard = () => {
 
   const fetchNotices = async () => {
     try {
-    
       const res = await axios.get(getApiEndpoint(), getAuthHeaders());
       setNotices(res.data);
     } catch (err) {
@@ -59,9 +56,8 @@ const NoticeBoard = () => {
     e.preventDefault();
     if (user?.role !== 'Admin') return;
     try {
-      
       await axios.post(
-        'http://localhost:5000/api/admin/notices',
+        'https://university-erp-backend-yfj2.onrender.com//api/admin/notices',
         formData,
         getAuthHeaders(),
       );
@@ -84,7 +80,7 @@ const NoticeBoard = () => {
     try {
       // সমাধান: টোকেন হেডার দিয়ে ডাটা ডিলিট করা হলো
       await axios.delete(
-        `http://localhost:5000/api/admin/notices/${deleteTarget}`,
+        `https://university-erp-backend-yfj2.onrender.com//api/admin/notices/${deleteTarget}`,
         getAuthHeaders(),
       );
       showToast('Notice deleted successfully', 'success');

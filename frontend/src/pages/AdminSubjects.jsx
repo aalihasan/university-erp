@@ -11,7 +11,11 @@ const AdminSubjects = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCourse, setFilterCourse] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ name: '', course: '', professor: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    course: '',
+    professor: '',
+  });
   const [editingId, setEditingId] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -20,8 +24,8 @@ const AdminSubjects = () => {
     const token = localStorage.getItem('token');
     return {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     };
   };
 
@@ -33,34 +37,43 @@ const AdminSubjects = () => {
     try {
       // সমাধান: লোকাল স্টোরেজের প্রপার হেডার দিয়ে ৩টি এপিআই কল করা হলো
       const [subRes, crsRes, profRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/subjects', getAuthHeaders()),
-        axios.get('http://localhost:5000/api/admin/courses', getAuthHeaders()),
-        axios.get('http://localhost:5000/api/admin/users?role=Professor', getAuthHeaders())
+        axios.get(
+          'https://university-erp-backend-yfj2.onrender.com//api/admin/subjects',
+          getAuthHeaders(),
+        ),
+        axios.get(
+          'https://university-erp-backend-yfj2.onrender.com//api/admin/courses',
+          getAuthHeaders(),
+        ),
+        axios.get(
+          'https://university-erp-backend-yfj2.onrender.com//api/admin/users?role=Professor',
+          getAuthHeaders(),
+        ),
       ]);
       setSubjects(subRes.data);
       setCourses(crsRes.data);
       setProfessors(profRes.data);
     } catch (err) {
-      console.error("Error fetching data:", err);
+      console.error('Error fetching data:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/admin/subjects/${editingId}`, 
-          formData, 
-          getAuthHeaders()
+          `https://university-erp-backend-yfj2.onrender.com//api/admin/subjects/${editingId}`,
+          formData,
+          getAuthHeaders(),
         );
       } else {
         await axios.post(
-          'http://localhost:5000/api/admin/subjects', 
-          formData, 
-          getAuthHeaders()
+          'https://university-erp-backend-yfj2.onrender.com//api/admin/subjects',
+          formData,
+          getAuthHeaders(),
         );
       }
       setShowForm(false);
@@ -72,7 +85,7 @@ const AdminSubjects = () => {
     }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = id => {
     setDeleteTarget(id);
   };
 
@@ -80,8 +93,8 @@ const AdminSubjects = () => {
     if (!deleteTarget) return;
     try {
       await axios.delete(
-        `http://localhost:5000/api/admin/subjects/${deleteTarget}`, 
-        getAuthHeaders()
+        `https://university-erp-backend-yfj2.onrender.com//api/admin/subjects/${deleteTarget}`,
+        getAuthHeaders(),
       );
       fetchData();
     } catch {
@@ -91,15 +104,23 @@ const AdminSubjects = () => {
     }
   };
 
-  const handleEdit = (sub) => {
-    setFormData({ name: sub.name, course: sub.course?._id || '', professor: sub.professor?._id || '' });
+  const handleEdit = sub => {
+    setFormData({
+      name: sub.name,
+      course: sub.course?._id || '',
+      professor: sub.professor?._id || '',
+    });
     setEditingId(sub._id);
     setShowForm(true);
   };
 
   const filteredSubjects = subjects.filter(sub => {
-    const matchesSearch = sub.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCourse = filterCourse ? (sub.course?._id === filterCourse || sub.course === filterCourse) : true;
+    const matchesSearch = sub.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesCourse = filterCourse
+      ? sub.course?._id === filterCourse || sub.course === filterCourse
+      : true;
     return matchesSearch && matchesCourse;
   });
 
@@ -112,49 +133,121 @@ const AdminSubjects = () => {
             type="text"
             placeholder="Search subjects..."
             className="form-input"
-            style={{ minWidth: '180px', flex: 1, marginBottom: 0, padding: '0.5rem' }}
+            style={{
+              minWidth: '180px',
+              flex: 1,
+              marginBottom: 0,
+              padding: '0.5rem',
+            }}
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
           />
           <select
             className="form-input"
-            style={{ minWidth: '140px', flex: 1, marginBottom: 0, padding: '0.5rem' }}
+            style={{
+              minWidth: '140px',
+              flex: 1,
+              marginBottom: 0,
+              padding: '0.5rem',
+            }}
             value={filterCourse}
-            onChange={(e) => setFilterCourse(e.target.value)}
+            onChange={e => setFilterCourse(e.target.value)}
           >
             <option value="">All Courses</option>
-            {courses.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+            {courses.map(c => (
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
+            ))}
           </select>
-          <button className="btn btn-primary" onClick={() => { setShowForm(!showForm); setEditingId(null); setFormData({ name: '', course: '', professor: '' }); }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setShowForm(!showForm);
+              setEditingId(null);
+              setFormData({ name: '', course: '', professor: '' });
+            }}
+          >
             <FileText size={18} style={{ marginRight: '0.5rem' }} /> Add Subject
           </button>
         </div>
       </div>
       {showForm && (
-        <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
+        <div
+          className="glass-panel"
+          style={{ padding: '1.5rem', marginBottom: '2rem' }}
+        >
           <h3>{editingId ? 'Edit' : 'Add'} Subject</h3>
-          <form onSubmit={handleSubmit} className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+          <form
+            onSubmit={handleSubmit}
+            className="grid"
+            style={{
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '1rem',
+            }}
+          >
             <div className="form-group" style={{ gridColumn: 'span 2' }}>
               <label className="form-label">Subject Name</label>
-              <input type="text" className="form-input" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
+              <input
+                type="text"
+                className="form-input"
+                value={formData.name}
+                onChange={e =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                required
+              />
             </div>
             <div className="form-group">
               <label className="form-label">Associated Course</label>
-              <select className="form-input" value={formData.course} onChange={(e) => setFormData({ ...formData, course: e.target.value })} required>
+              <select
+                className="form-input"
+                value={formData.course}
+                onChange={e =>
+                  setFormData({ ...formData, course: e.target.value })
+                }
+                required
+              >
                 <option value="">Select Course</option>
-                {courses.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+                {courses.map(c => (
+                  <option key={c._id} value={c._id}>
+                    {c.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="form-group">
               <label className="form-label">Assigned Professor</label>
-              <select className="form-input" value={formData.professor} onChange={(e) => setFormData({ ...formData, professor: e.target.value })}>
+              <select
+                className="form-input"
+                value={formData.professor}
+                onChange={e =>
+                  setFormData({ ...formData, professor: e.target.value })
+                }
+              >
                 <option value="">None (Unassigned)</option>
-                {professors.map(p => <option key={p._id} value={p._id}>{p.name}</option>)}
+                {professors.map(p => (
+                  <option key={p._id} value={p._id}>
+                    {p.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div style={{ gridColumn: 'span 2' }}>
-              <button type="submit" className="btn btn-primary" style={{ marginRight: '1rem' }}>Save changes</button>
-              <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                style={{ marginRight: '1rem' }}
+              >
+                Save changes
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => setShowForm(false)}
+              >
+                Cancel
+              </button>
             </div>
           </form>
         </div>
@@ -170,19 +263,49 @@ const AdminSubjects = () => {
             </tr>
           </thead>
           <tbody>
-            {loading ? <tr><td colSpan="4" className="text-center">Loading...</td></tr> :
+            {loading ? (
+              <tr>
+                <td colSpan="4" className="text-center">
+                  Loading...
+                </td>
+              </tr>
+            ) : (
               filteredSubjects.map(sub => (
                 <tr key={sub._id}>
                   <td>{sub.name}</td>
                   <td>{sub.course?.name || 'Unknown'}</td>
                   <td>{sub.professor?.name || 'Unassigned'}</td>
                   <td>
-                    <button onClick={() => handleEdit(sub)} style={{ background: 'transparent', color: 'var(--accent-primary)', marginRight: '1rem' }}><Edit2 size={18} /></button>
-                    <button onClick={() => handleDelete(sub._id)} style={{ background: 'transparent', color: 'var(--danger)' }}><Trash2 size={18} /></button>
+                    <button
+                      onClick={() => handleEdit(sub)}
+                      style={{
+                        background: 'transparent',
+                        color: 'var(--accent-primary)',
+                        marginRight: '1rem',
+                      }}
+                    >
+                      <Edit2 size={18} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(sub._id)}
+                      style={{
+                        background: 'transparent',
+                        color: 'var(--danger)',
+                      }}
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </td>
                 </tr>
-              ))}
-            {filteredSubjects.length === 0 && !loading && <tr><td colSpan="4" className="text-center">No Subjects found matching filters.</td></tr>}
+              ))
+            )}
+            {filteredSubjects.length === 0 && !loading && (
+              <tr>
+                <td colSpan="4" className="text-center">
+                  No Subjects found matching filters.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -134,7 +134,7 @@ const TopNav = ({ title, onMenuToggle }) => {
 
   const API_URL =
     import.meta.env.VITE_API_URL?.replace('/api', '') ||
-    'http://localhost:5000';
+    'https://university-erp-backend-yfj2.onrender.com/';
 
   return (
     <div

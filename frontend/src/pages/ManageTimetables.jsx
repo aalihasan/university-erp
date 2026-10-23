@@ -43,9 +43,12 @@ const ManageTimetables = () => {
     try {
       setLoading(true);
       const [listRes, formRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/timetable/list', hHeaders()),
         axios.get(
-          'http://localhost:5000/api/admin/timetable/form-data',
+          'https://university-erp-backend-yfj2.onrender.com//api/admin/timetable/list',
+          hHeaders(),
+        ),
+        axios.get(
+          'https://university-erp-backend-yfj2.onrender.com//api/admin/timetable/form-data',
           hHeaders(),
         ),
       ]);
@@ -73,7 +76,7 @@ const ManageTimetables = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:5000/api/admin/timetable/create',
+        'https://university-erp-backend-yfj2.onrender.com//api/admin/timetable/create',
         formData,
         hHeaders(),
       );
@@ -102,7 +105,7 @@ const ManageTimetables = () => {
     if (!window.confirm('Delete this class schedule?')) return;
     try {
       await axios.delete(
-        `http://localhost:5000/api/admin/timetable/delete/${id}`,
+        `https://university-erp-backend-yfj2.onrender.com//api/admin/timetable/delete/${id}`,
         hHeaders(),
       );
       showToast('Schedule removed!', 'success');
