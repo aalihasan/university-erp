@@ -54,16 +54,20 @@ const ManageTimetables = () => {
       setCourses(formRes.data?.courses || []);
       setSubjects(formRes.data?.subjects || []);
       setProfessors(formRes.data?.professors || []);
-    } catch {
+    } catch (err) {
+      console.error(err);
       showToast('Error loading timetable data', 'error');
     } finally {
       setLoading(false);
     }
   };
 
+  // 🌟 সমাধান: অসীম লুপ (Infinite Loop) এবং ERR_INSUFFICIENT_RESOURCES চিরতরে বন্ধ করতে
+  // ডিপেন্ডেন্সি অ্যারে সম্পূর্ণ খালি [] রাখা হলো এবং ESLint ওয়ার্নিং লক কমেন্ট যুক্ত করা হলো।
   useEffect(() => {
     loadInitialData();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const hSubmit = async e => {
     e.preventDefault();

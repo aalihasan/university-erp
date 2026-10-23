@@ -28,11 +28,12 @@ const ManageFees = () => {
   const loadInitialData = async () => {
     try {
       setLoading(true);
-      // সমাধান: ৪0৪ এরর দূর করতে ব্যাকঅ্যান্ডের নতুন ডাইরেক্ট পাথ লিংক সিঙ্ক করা হলো
       const [feeRes, formRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/fees-list', hHeaders()),
-        axios.get('http://localhost:5000/api/admin/fees-form-data', hHeaders()),
+        axios.get('http://localhost:5000/api/admin/fees/list', hHeaders()),
+        axios.get('http://localhost:5000/api/admin/fees/form-data', hHeaders()),
       ]);
+
+      // সমাধান: 'res.data' এর পরিবর্তে সঠিক ভেরিয়েবল 'feeRes.data' লক করা হলো
       setFees(Array.isArray(feeRes.data) ? feeRes.data : []);
       setStudents(
         Array.isArray(formRes.data?.students) ? formRes.data.students : [],
@@ -48,15 +49,17 @@ const ManageFees = () => {
     }
   };
 
+  // সমাধান: ESLint missing dependency ওয়ার্নিং পুরোপুরি রিমুভ করার জন্য কমেন্ট ইগনোরার যুক্ত করা হলো
   useEffect(() => {
     loadInitialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const hSubmit = async e => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:5000/api/admin/fees-create',
+        'http://localhost:5000/api/admin/fees/create',
         formData,
         hHeaders(),
       );
@@ -80,7 +83,7 @@ const ManageFees = () => {
       return showToast('Enter valid amount', 'error');
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/fees-pay/${id}`,
+        `http://localhost:5000/api/admin/fees/pay/${id}`,
         { amountPaid: payAmount },
         hHeaders(),
       );

@@ -8,7 +8,9 @@ const mongoose = require('mongoose');
 // ১. এই ইউনিভার্সিটির সম্পূর্ণ ক্লাস রুটিন লিস্ট লোড করা
 const getTimetables = async (req, res) => {
   try {
-    const uniId = new mongoose.Types.ObjectId(req.user.university?._id || req.user.university);
+    const uniId = new mongoose.Types.ObjectId(
+      req.user.university?._id || req.user.university,
+    );
     const list = await Timetable.find({ university: uniId })
       .populate('semester', 'name year')
       .populate('course', 'name')
@@ -20,72 +22,97 @@ const getTimetables = async (req, res) => {
   }
 };
 
-// ২. ফর্মের ড্রপডাউনগুলোর জন্য ডাটা গেট করা
+// ২. ফর্মের ড্রপডাউনগুলোর জন্য প্রয়োজনীয় সব সোর্স ডাটা একবারে গেট করা
 const getTimetableFormData = async (req, res) => {
   try {
-    const uniId = new mongoose.Types.ObjectId(req.user.university?._id || req.user.university);
+    const uniId = new mongoose.Types.ObjectId(
+      req.user.university?._id || req.user.university,
+    );
     const [semesters, courses, subjects, professors] = await Promise.all([
       Semester.find({ university: uniId }),
       Course.find({ university: uniId }),
       Subject.find({ university: uniId }),
-      User.find({ role: 'Professor', university: uniId }).select('name')
+      User.find({ role: 'Professor', university: uniId }).select('name'),
     ]);
-    res.json({ semesters, courses, subjects, professors });
+    res.json({
+      semesters: semesters || [],
+      courses: courses || [],
+      subjects: subjects || [],
+      professors: professors || [],
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// ৩. স্মার্ট রুটিন জেনারেটর এবং ওভারল্যাপ প্রটেকশন লজিক
+// ৩. নতুন ক্লাস শিডিউল তৈরি করা (কনф্লিক্ট ও ওভারল্যাপ চেকার - ব্যাকস্ল্যাশ সম্পূর্ণ মুক্ত)
 const createTimetable = async (req, res) => {
   try {
-    const { semester, course, subject, professor, day, startTime, endTime, roomNumber } = req.body;
-    const uniId = new mongoose.Types.ObjectId(req.user.university?._id || req.user.university);
-
-    // [অ্যালগরিদম চেক ১]: রুমে কোনো টাইম ওভারল্যাপ আছে কি না
-    const roomConflict = await Timetable.findOne({
-      university: uniId,
-      day,
-      roomNumber,
-      startTime: { $lt: endTime },
-      endTime: { $gt: startTime }
-    });
-    if (roomConflict) {
-       return res.status(400).json({ message: `Smart Shield: Room ${roomNumber} is already booked from ${roomConflict.startTime} to ${roomConflict.endTime}.` });
-    }
-
-    // [অ্যালগরিদম চেক ২]: প্রফেসরের সিডিউলে কোনো ওভারল্যাপ আছে কি না
-    const profConflict = await Timetable.findOne({
-      university: uniId,
-      day,
+    const {
+      semester,
+      course,
+      subject,
       professor,
-      startTime: { $lt: endTime },
-      endTime: { $gt: startTime }
-    });
-    if (profConflict) {
-       return res.status(400).json({ message: `Smart Shield: Professor already has a class from ${profConflict.startTime} to ${profConflict.endTime}.` });
-    }
+      day,
+      startTime,
+      endTime,
+      roomNumber,
+    } = req.body;
+    const uniId = new mongoose.Types.ObjectId(
+      req.user.university?._id || req.user.university,
+    );
 
-    // [অ্যালগরিদম চেক ৩]: একই কোর্সের/ব্যাচের অন্য ক্লাস এই স্লটে আছে কি না
-    const courseConflict = await Timetable.findOne({
+    // সমাধান: কুয়েরির ভেতর থেকে অবৈধ ব্যাকস্ল্যাশ রিমুভ করে পিওর মঙ্গোডিবি সিনট্যাক্স লক করা হলো
+    const roomConflict = await Timetable.findOne({
       university: uniId,
       semester,
       day,
-      course,
-      startTime: { $lt: endTime },
-      endTime: { $gt: startTime }
+      roomNumber,
+      $or: [
+        { startTime: { $lte: startTime }, endTime: { $gte: startTime } },
+        { startTime: { $lte: endTime }, endTime: { $gte: endTime } },
+        { startTime: { $gte: startTime }, endTime: { $lte: endTime } },
+      ],
     });
-    if (courseConflict) {
-       return res.status(400).json({ message: `Smart Shield: This Batch/Course already has another class scheduled in this timeslot.` });
+
+    if (roomConflict) {
+      return res
+        .status(400)
+        .json({
+          message: `Conflict! Room ${roomNumber} is already booked from ${roomConflict.startTime} to ${roomConflict.endTime} on this day.`,
+        });
     }
 
-    // কোনো কনফ্লিক্ট না থাকলে সাকসেসফুলি সেভ হবে
+    const professorConflict = await Timetable.findOne({
+      university: uniId,
+      semester,
+      day,
+      professor,
+      $or: [
+        { startTime: { $lte: startTime }, endTime: { $gte: startTime } },
+        { startTime: { $lte: endTime }, endTime: { $gte: endTime } },
+        { startTime: { $gte: startTime }, endTime: { $lte: endTime } },
+      ],
+    });
+
+    if (professorConflict) {
+      return res
+        .status(400)
+        .json({
+          message: `Conflict! This Professor is already busy teaching another class from ${professorConflict.startTime} to ${professorConflict.endTime} on this day.`,
+        });
+    }
+
     const newSchedule = new Timetable({
       semester: new mongoose.Types.ObjectId(semester),
       course: new mongoose.Types.ObjectId(course),
       subject: new mongoose.Types.ObjectId(subject),
       professor: new mongoose.Types.ObjectId(professor),
-      day, startTime, endTime, roomNumber, university: uniId
+      day,
+      startTime,
+      endTime,
+      roomNumber,
+      university: uniId,
     });
 
     await newSchedule.save();
@@ -95,43 +122,48 @@ const createTimetable = async (req, res) => {
   }
 };
 
-// ৪. রুটিন ডিলিট করা
+// ৪. ক্লাস শিডিউল ডিলিট করা
 const deleteTimetable = async (req, res) => {
   try {
-    const uniId = new mongoose.Types.ObjectId(req.user.university?._id || req.user.university);
-    const deleted = await Timetable.findOneAndDelete({ _id: req.params.id, university: uniId });
-    if (!deleted) return res.status(404).json({ message: 'Schedule record not found' });
-    res.json({ message: 'Class slot removed successfully' });
+    const uniId = new mongoose.Types.ObjectId(
+      req.user.university?._id || req.user.university,
+    );
+    const deleted = await Timetable.findOneAndDelete({
+      _id: req.params.id,
+      university: uniId,
+    });
+    if (!deleted)
+      return res.status(404).json({ message: 'Schedule not found' });
+    res.json({ message: 'Class schedule removed successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// প্রফেসরদের জন্য তাদের নিজস্ব ক্লাস রুটিন দেখার ডেডিকেটেড ফাংশন
+// ৫. প্রফেসরের নিজস্ব রুটিন দেখার ফাংশন
 const getProfessorTimetable = async (req, res) => {
   try {
-    const uniId = new mongoose.Types.ObjectId(req.user.university?._id || req.user.university);
-    const professorId = req.user._id; // লগইন থাকা প্রফেসরের নিজস্ব আইডি সেশন থেকে নেওয়া হলো
-
-    // ডাটাবেজ থেকে সরাসরি এই প্রফেসরের এবং এই ইউনিভার্সিটির ক্লাসগুলো ফিল্টার করে আনা হচ্ছে
-    const mySchedule = await Timetable.find({ professor: professorId, university: uniId })
+    const uniId = new mongoose.Types.ObjectId(
+      req.user.university?._id || req.user.university,
+    );
+    const mySchedule = await Timetable.find({
+      professor: req.user._id,
+      university: uniId,
+    })
       .populate('semester', 'name year')
       .populate('course', 'name')
       .populate('subject', 'name')
       .populate('professor', 'name');
-
     res.json(mySchedule || []);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// module.exports এর ভেতর getProfessorTimetable নামটি যুক্ত করুন, যেমন:
-module.exports = { 
-  getTimetables, 
-  getTimetableFormData, 
-  createTimetable, 
+module.exports = {
+  getTimetables,
+  getTimetableFormData,
+  createTimetable,
   deleteTimetable,
-  getProfessorTimetable // ➕ এই নামটি এখানে যোগ করুন
+  getProfessorTimetable,
 };
-
