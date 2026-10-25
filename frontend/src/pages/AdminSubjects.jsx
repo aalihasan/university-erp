@@ -37,10 +37,16 @@ const AdminSubjects = () => {
     try {
       // সমাধান: লোকাল স্টোরেজের প্রপার হেডার দিয়ে ৩টি এপিআই কল করা হলো
       const [subRes, crsRes, profRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/subjects', getAuthHeaders()),
-        axios.get('http://localhost:5000/api/admin/courses', getAuthHeaders()),
         axios.get(
-          'http://localhost:5000/api/admin/users?role=Professor',
+          'http://https://university-management-api-oi6s.onrender.com/api/admin/subjects',
+          getAuthHeaders(),
+        ),
+        axios.get(
+          'http://https://university-management-api-oi6s.onrender.com/api/admin/courses',
+          getAuthHeaders(),
+        ),
+        axios.get(
+          'http://https://university-management-api-oi6s.onrender.com/api/admin/users?role=Professor',
           getAuthHeaders(),
         ),
       ]);
@@ -59,13 +65,13 @@ const AdminSubjects = () => {
     try {
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/admin/subjects/${editingId}`,
+          `http://https://university-management-api-oi6s.onrender.com/api/admin/subjects/${editingId}`,
           formData,
           getAuthHeaders(),
         );
       } else {
         await axios.post(
-          'http://localhost:5000/api/admin/subjects',
+          'http://https://university-management-api-oi6s.onrender.com/api/admin/subjects',
           formData,
           getAuthHeaders(),
         );
@@ -87,7 +93,7 @@ const AdminSubjects = () => {
     if (!deleteTarget) return;
     try {
       await axios.delete(
-        `http://localhost:5000/api/admin/subjects/${deleteTarget}`,
+        `http://https://university-management-api-oi6s.onrender.com/api/admin/subjects/${deleteTarget}`,
         getAuthHeaders(),
       );
       fetchData();

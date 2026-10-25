@@ -229,7 +229,7 @@ npm run dev
 ### 8️⃣ Open in Browser
 
 ```text
-http://localhost:5000
+http://https://university-management-api-oi6s.onrender.com
 ```
 
 ---

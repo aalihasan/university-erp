@@ -15,7 +15,7 @@ const ManageAdvising = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        'http://localhost:5000/api/admin/advising/list',
+        'http://https://university-management-api-oi6s.onrender.com/api/admin/advising/list',
         hHeaders(),
       );
       setAdvisings(Array.isArray(res.data) ? res.data : []);
@@ -35,7 +35,7 @@ const ManageAdvising = () => {
   const handleAction = async (id, status) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/advising/respond/${id}`,
+        `http://https://university-management-api-oi6s.onrender.com/api/admin/advising/respond/${id}`,
         { status },
         hHeaders(),
       );
