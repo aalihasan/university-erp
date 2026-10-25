@@ -20,7 +20,7 @@ const StudentLeaves = () => {
 
       // সমাধান: এক্সিওস রিকোয়েস্টে হেডার পাসিং লজিক ১০০% নিখুঁত করা হলো
       const res = await axios.get(
-        'http://https://university-management-api-oi6s.onrender.com/api/student/leaves',
+        'https://university-management-api-oi6s.onrender.com/api/student/leaves',
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,7 +49,7 @@ const StudentLeaves = () => {
 
       // সমাধান: পোস্ট রিকোয়েস্টে ডেটা রেন্ডারিং সিঙ্ক
       await axios.post(
-        'http://https://university-management-api-oi6s.onrender.com/api/student/leaves',
+        'https://university-management-api-oi6s.onrender.com/api/student/leaves',
         formData,
         {
           headers: {

@@ -38,15 +38,15 @@ const AdminSubjects = () => {
       // সমাধান: লোকাল স্টোরেজের প্রপার হেডার দিয়ে ৩টি এপিআই কল করা হলো
       const [subRes, crsRes, profRes] = await Promise.all([
         axios.get(
-          'http://https://university-management-api-oi6s.onrender.com/api/admin/subjects',
+          'https://university-management-api-oi6s.onrender.com/api/admin/subjects',
           getAuthHeaders(),
         ),
         axios.get(
-          'http://https://university-management-api-oi6s.onrender.com/api/admin/courses',
+          'https://university-management-api-oi6s.onrender.com/api/admin/courses',
           getAuthHeaders(),
         ),
         axios.get(
-          'http://https://university-management-api-oi6s.onrender.com/api/admin/users?role=Professor',
+          'https://university-management-api-oi6s.onrender.com/api/admin/users?role=Professor',
           getAuthHeaders(),
         ),
       ]);
@@ -65,13 +65,13 @@ const AdminSubjects = () => {
     try {
       if (editingId) {
         await axios.put(
-          `http://https://university-management-api-oi6s.onrender.com/api/admin/subjects/${editingId}`,
+          `https://university-management-api-oi6s.onrender.com/api/admin/subjects/${editingId}`,
           formData,
           getAuthHeaders(),
         );
       } else {
         await axios.post(
-          'http://https://university-management-api-oi6s.onrender.com/api/admin/subjects',
+          'https://university-management-api-oi6s.onrender.com/api/admin/subjects',
           formData,
           getAuthHeaders(),
         );
@@ -93,7 +93,7 @@ const AdminSubjects = () => {
     if (!deleteTarget) return;
     try {
       await axios.delete(
-        `http://https://university-management-api-oi6s.onrender.com/api/admin/subjects/${deleteTarget}`,
+        `https://university-management-api-oi6s.onrender.com/api/admin/subjects/${deleteTarget}`,
         getAuthHeaders(),
       );
       fetchData();

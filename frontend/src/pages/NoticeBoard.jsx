@@ -29,10 +29,10 @@ const NoticeBoard = () => {
 
   const getApiEndpoint = () => {
     if (user?.role === 'Admin')
-      return 'http://https://university-management-api-oi6s.onrender.com/api/admin/notices';
+      return 'https://university-management-api-oi6s.onrender.com/api/admin/notices';
     if (user?.role === 'Professor')
-      return 'http://https://university-management-api-oi6s.onrender.com/api/professor/notices';
-    return 'http://https://university-management-api-oi6s.onrender.com/api/student/notices';
+      return 'https://university-management-api-oi6s.onrender.com/api/professor/notices';
+    return 'https://university-management-api-oi6s.onrender.com/api/student/notices';
   };
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const NoticeBoard = () => {
     if (user?.role !== 'Admin') return;
     try {
       await axios.post(
-        'http://https://university-management-api-oi6s.onrender.com/api/admin/notices',
+        'https://university-management-api-oi6s.onrender.com/api/admin/notices',
         formData,
         getAuthHeaders(),
       );
@@ -80,7 +80,7 @@ const NoticeBoard = () => {
     try {
       // সমাধান: টোকেন হেডার দিয়ে ডাটা ডিলিট করা হলো
       await axios.delete(
-        `http://https://university-management-api-oi6s.onrender.com/api/admin/notices/${deleteTarget}`,
+        `https://university-management-api-oi6s.onrender.com/api/admin/notices/${deleteTarget}`,
         getAuthHeaders(),
       );
       showToast('Notice deleted successfully', 'success');

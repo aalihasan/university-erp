@@ -31,7 +31,7 @@ const ManageSemesters = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        'http://https://university-management-api-oi6s.onrender.com/api/admin/semesters',
+        'https://university-management-api-oi6s.onrender.com/api/admin/semesters',
         hHeaders(),
       );
       setSemesters(Array.isArray(res.data) ? res.data : []);
@@ -67,14 +67,14 @@ const ManageSemesters = () => {
     try {
       if (isEditing) {
         await axios.put(
-          `http://https://university-management-api-oi6s.onrender.com/api/admin/semesters/${editId}`,
+          `https://university-management-api-oi6s.onrender.com/api/admin/semesters/${editId}`,
           formData,
           hHeaders(),
         );
         showToast('Updated!', 'success');
       } else {
         await axios.post(
-          'http://https://university-management-api-oi6s.onrender.com/api/admin/semesters',
+          'https://university-management-api-oi6s.onrender.com/api/admin/semesters',
           formData,
           hHeaders(),
         );
@@ -109,7 +109,7 @@ const ManageSemesters = () => {
     if (!window.confirm('Delete this session?')) return;
     try {
       await axios.delete(
-        `http://https://university-management-api-oi6s.onrender.com/api/admin/semesters/${id}`,
+        `https://university-management-api-oi6s.onrender.com/api/admin/semesters/${id}`,
         hHeaders(),
       );
       showToast('Deleted!', 'success');

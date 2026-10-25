@@ -16,7 +16,7 @@ const StudentReport = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          'http://https://university-management-api-oi6s.onrender.com/api/admin/grades/report-card',
+          'https://university-management-api-oi6s.onrender.com/api/admin/grades/report-card',
           hHeaders(),
         );
         setRecords(Array.isArray(res.data) ? res.data : []);

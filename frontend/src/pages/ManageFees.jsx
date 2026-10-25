@@ -30,11 +30,11 @@ const ManageFees = () => {
       setLoading(true);
       const [feeRes, formRes] = await Promise.all([
         axios.get(
-          'http://https://university-management-api-oi6s.onrender.com/api/admin/fees/list',
+          'https://university-management-api-oi6s.onrender.com/api/admin/fees/list',
           hHeaders(),
         ),
         axios.get(
-          'http://https://university-management-api-oi6s.onrender.com/api/admin/fees/form-data',
+          'https://university-management-api-oi6s.onrender.com/api/admin/fees/form-data',
           hHeaders(),
         ),
       ]);
@@ -65,7 +65,7 @@ const ManageFees = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://https://university-management-api-oi6s.onrender.com/api/admin/fees/create',
+        'https://university-management-api-oi6s.onrender.com/api/admin/fees/create',
         formData,
         hHeaders(),
       );
@@ -89,7 +89,7 @@ const ManageFees = () => {
       return showToast('Enter valid amount', 'error');
     try {
       await axios.put(
-        `http://https://university-management-api-oi6s.onrender.com/api/admin/fees/pay/${id}`,
+        `https://university-management-api-oi6s.onrender.com/api/admin/fees/pay/${id}`,
         { amountPaid: payAmount },
         hHeaders(),
       );

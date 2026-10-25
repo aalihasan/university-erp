@@ -25,11 +25,11 @@ const ProfMaterials = () => {
     try {
       const [matRes, crsRes] = await Promise.all([
         axios.get(
-          'http://https://university-management-api-oi6s.onrender.com/api/professor/studymaterial',
+          'https://university-management-api-oi6s.onrender.com/api/professor/studymaterial',
           getAuthHeaders(),
         ),
         axios.get(
-          'http://https://university-management-api-oi6s.onrender.com/api/professor/courses',
+          'https://university-management-api-oi6s.onrender.com/api/professor/courses',
           getAuthHeaders(),
         ),
       ]);
@@ -59,7 +59,7 @@ const ProfMaterials = () => {
 
     try {
       await axios.post(
-        'http://https://university-management-api-oi6s.onrender.com/api/professor/studymaterial',
+        'https://university-management-api-oi6s.onrender.com/api/professor/studymaterial',
         formData,
         {
           headers: {
@@ -87,7 +87,7 @@ const ProfMaterials = () => {
     if (!deleteTarget) return;
     try {
       await axios.delete(
-        `http://https://university-management-api-oi6s.onrender.com/api/professor/studymaterial/${deleteTarget}`,
+        `https://university-management-api-oi6s.onrender.com/api/professor/studymaterial/${deleteTarget}`,
         getAuthHeaders(),
       );
       fetchData();
@@ -214,7 +214,7 @@ const ProfMaterials = () => {
             </p>
             <p style={{ marginTop: '0.5rem', flex: 1 }}>{mat.description}</p>
             <a
-              href={`http://https://university-management-api-oi6s.onrender.com${mat.fileUrl}`}
+              href={`https://university-management-api-oi6s.onrender.com${mat.fileUrl}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary"
